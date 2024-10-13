@@ -1,0 +1,164 @@
+ContactNode Class
+vbnet
+Copy code
+Class ContactNode:
+    String name
+    String phoneNumber
+    String emailAddress
+    ContactNode next
+
+    Function ContactNode(name, phoneNumber, emailAddress):
+        Set this.name = name
+        Set this.phoneNumber = phoneNumber
+        Set this.emailAddress = emailAddress
+        Set this.next = null
+    End Function
+End Class
+Phonebook Class
+mathematica
+Copy code
+Class Phonebook:
+    ContactNode head
+
+    Function addContact(name, phoneNumber, emailAddress):
+        Create newNode as ContactNode with name, phoneNumber, and emailAddress
+        Set newNode.next = head
+        Set head = newNode
+        Print "Contact added successfully."
+    End Function
+
+    Function deleteContact(contactName):
+        Set current = head
+        Set previous = null
+        Set found = false
+
+        While current is not null:
+            If current.name equals contactName:
+                If previous is null:
+                    Set head = current.next
+                Else:
+                    Set previous.next = current.next
+                End If
+                Set found = true
+                Print "Contact '" + contactName + "' deleted successfully."
+                Break
+            End If
+            Set previous = current
+            Set current = current.next
+        End While
+
+        If found equals false:
+            Print "Contact '" + contactName + "' not found."
+        End If
+    End Function
+
+    Function updateContact(contactName, newPhoneNumber):
+        Set current = head
+        Set found = false
+
+        While current is not null:
+            If current.name equals contactName:
+                Set current.phoneNumber = newPhoneNumber
+                Set found = true
+                Print "Contact '" + contactName + "' updated successfully."
+                Break
+            End If
+            Set current = current.next
+        End While
+
+        If found equals false:
+            Print "Contact '" + contactName + "' not found."
+        End If
+    End Function
+
+    Function sortContacts():
+        If head is null OR head.next is null:
+            Return
+        End If
+
+        Do:
+            Set swapped = false
+            Set current = head
+            Set nextNode = current.next
+
+            While nextNode is not null:
+                If current.name > nextNode.name:
+                    Swap current.name with nextNode.name
+                    Swap current.phoneNumber with nextNode.phoneNumber
+                    Swap current.emailAddress with nextNode.emailAddress
+                    Set swapped = true
+                End If
+                Set current = nextNode
+                Set nextNode = nextNode.next
+            End While
+        While swapped equals true
+
+        Print "Contacts sorted by name."
+    End Function
+
+    Function displayContacts():
+        If head is null:
+            Print "No contacts available."
+            Return
+        End If
+
+        Set current = head
+        Print "\nContacts in Phonebook:"
+        While current is not null:
+            Print "Name: " + current.name + ", Phone: " + current.phoneNumber + ", Email: " + current.emailAddress
+            Set current = current.next
+        End While
+    End Function
+End Class
+Main Program
+sql
+Copy code
+Function main():
+    Create phonebook as new Phonebook
+    Create scanner for input
+    Set running = true
+
+    While running equals true:
+        Print "\n--- Phonebook System ---"
+        Print "1. Add Contact"
+        Print "2. Delete Contact"
+        Print "3. Update Contact"
+        Print "4. Sort Contacts"
+        Print "5. Display All Contacts"
+        Print "6. Exit"
+        Print "Enter your choice: "
+        Set choice = scanner.nextInt()
+        Call scanner.nextLine() to consume newline
+
+        If choice equals 1:
+            Print "Enter name: "
+            Set name = scanner.nextLine()
+            Print "Enter phone number: "
+            Set phoneNumber = scanner.nextLine()
+            Print "Enter email address: "
+            Set emailAddress = scanner.nextLine()
+            Call phonebook.addContact(name, phoneNumber, emailAddress)
+        Else If choice equals 2:
+            Print "Enter name of contact to delete: "
+            Set deleteName = scanner.nextLine()
+            Call phonebook.deleteContact(deleteName)
+        Else If choice equals 3:
+            Print "Enter name of contact to update: "
+            Set updateName = scanner.nextLine()
+            Print "Enter new phone number: "
+            Set newPhoneNumber = scanner.nextLine()
+            Call phonebook.updateContact(updateName, newPhoneNumber)
+        Else If choice equals 4:
+            Call phonebook.sortContacts()
+        Else If choice equals 5:
+            Call phonebook.displayContacts()
+        Else If choice equals 6:
+            Set running = false
+            Print "Exiting the system..."
+        Else:
+            Print "Invalid choice! Try again."
+        End If
+    End While
+
+    Call scanner.close()
+End Function
