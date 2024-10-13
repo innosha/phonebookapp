@@ -1,0 +1,186 @@
+import java.util.Scanner;
+
+// Node class to store contact details
+class ContactNode {
+    String name;
+    String phoneNumber;
+    String emailAddress;
+    ContactNode next;
+
+    // Constructor for ContactNode
+    public ContactNode(String name, String phoneNumber, String emailAddress) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.emailAddress = emailAddress;
+        this.next = null; // Initialize the next pointer to null
+    }
+}
+
+// Phonebook class to manage contacts using a linked list
+public class Phonebook {
+    private ContactNode head; // Head of the linked list
+
+    // Method to add a contact
+    public void addContact(String name, String phoneNumber, String emailAddress) {
+        ContactNode newNode = new ContactNode(name, phoneNumber, emailAddress);
+        newNode.next = head; // Insert the new contact at the head of the list
+        head = newNode;
+        System.out.println("Contact added successfully.");
+    }
+
+    // Method to delete a contact by name
+    public void deleteContact(String contactName) {
+        ContactNode current = this.head;
+        ContactNode previous = null;
+        boolean found = false;
+
+        while (current != null) {
+            if (current.name.equals(contactName)) {
+                if (previous == null) {
+                    this.head = current.next; // Deleting the head
+                } else {
+                    previous.next = current.next; // Bypass the current node
+                }
+                found = true;
+                System.out.println("Contact '" + contactName + "' deleted successfully.");
+                break;
+            }
+            previous = current;
+            current = current.next;
+        }
+
+        if (!found) {
+            System.out.println("Contact '" + contactName + "' not found.");
+        }
+    }
+
+    // Method to update a contact's phone number by name
+    public void updateContact(String contactName, String newPhoneNumber) {
+        ContactNode current = this.head;
+        boolean found = false;
+
+        while (current != null) {
+            if (current.name.equals(contactName)) {
+                current.phoneNumber = newPhoneNumber; // Update the phone number
+                found = true;
+                System.out.println("Contact '" + contactName + "' updated successfully.");
+                break;
+            }
+            current = current.next;
+        }
+
+        if (!found) {
+            System.out.println("Contact '" + contactName + "' not found.");
+        }
+    }
+
+    // Method to sort contacts by name using bubble sort
+    public void sortContacts() {
+        if (head == null || head.next == null) {
+            return; // No need to sort if the list is empty or has one element
+        }
+
+        boolean swapped;
+        do {
+            swapped = false;
+            ContactNode current = head;
+            ContactNode nextNode = current.next;
+
+            while (nextNode != null) {
+                if (current.name.compareTo(nextNode.name) > 0) {
+                    // Swap the names and other details
+                    String tempName = current.name;
+                    String tempPhone = current.phoneNumber;
+                    String tempEmail = current.emailAddress;
+
+                    current.name = nextNode.name;
+                    current.phoneNumber = nextNode.phoneNumber;
+                    current.emailAddress = nextNode.emailAddress;
+
+                    nextNode.name = tempName;
+                    nextNode.phoneNumber = tempPhone;
+                    nextNode.emailAddress = tempEmail;
+
+                    swapped = true; // A swap occurred
+                }
+                current = nextNode;
+                nextNode = nextNode.next;
+            }
+        } while (swapped); // Repeat until no swaps occur
+
+        System.out.println("Contacts sorted by name.");
+    }
+
+    // Method to display all contacts
+    public void displayContacts() {
+        if (head == null) {
+            System.out.println("No contacts available.");
+            return;
+        }
+
+        ContactNode current = head;
+        System.out.println("\nContacts in Phonebook:");
+        while (current != null) {
+            System.out.println("Name: " + current.name + ", Phone: " + current.phoneNumber + ", Email: " + current.emailAddress);
+            current = current.next;
+        }
+    }
+
+    // Main method to run the console-based phonebook system
+    public static void main(String[] args) {
+        Phonebook phonebook = new Phonebook();
+        Scanner scanner = new Scanner(System.in);
+        boolean running = true;
+
+        while (running) {
+            System.out.println("\n--- Phonebook System ---");
+            System.out.println("1. Add Contact");
+            System.out.println("2. Delete Contact");
+            System.out.println("3. Update Contact");
+            System.out.println("4. Sort Contacts");
+            System.out.println("5. Display All Contacts");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline character
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Enter phone number: ");
+                    String phoneNumber = scanner.nextLine();
+                    System.out.print("Enter email address: ");
+                    String emailAddress = scanner.nextLine();
+                    phonebook.addContact(name, phoneNumber, emailAddress);
+                    break;
+                case 2:
+                    System.out.print("Enter name of contact to delete: ");
+                    String deleteName = scanner.nextLine();
+                    phonebook.deleteContact(deleteName);
+                    break;
+                case 3:
+                    System.out.print("Enter name of contact to update: ");
+                    String updateName = scanner.nextLine();
+                    System.out.print("Enter new phone number: ");
+                    String newPhoneNumber = scanner.nextLine();
+                    phonebook.updateContact(updateName, newPhoneNumber);
+                    break;
+                case 4:
+                    phonebook.sortContacts();
+                    break;
+                case 5:
+                    phonebook.displayContacts();
+                    break;
+                case 6:
+                    running = false;
+                    System.out.println("Exiting the system...");
+                    break;
+                default:
+                    System.out.println("Invalid choice! Try again.");
+            }
+        }
+
+        scanner.close();
+    }
+}
